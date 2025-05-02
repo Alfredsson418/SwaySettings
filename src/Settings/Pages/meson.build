@@ -21,4 +21,5 @@ swaysettings_sources += files([
   'Pulse/PulseDaemon.vala',
   'Pulse/PulseDevice.vala',
   'Pulse/PulseSinkInput.vala',
+  'Network/Network.vala'
 ])

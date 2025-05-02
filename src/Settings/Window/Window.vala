@@ -11,6 +11,7 @@ namespace SwaySettings {
         // SWAYNC,
         SOUND,
         BLUETOOTH,
+        NETWORK,
         KEYBOARD,
         MOUSE,
         TRACKPAD;
@@ -33,6 +34,8 @@ namespace SwaySettings {
                 //     return "Sway Notification Center";
                 case BLUETOOTH:
                     return "Bluetooth";
+                case NETWORK:
+                    return "Network";
                 case SOUND:
                     return "Sound";
                 case KEYBOARD:
@@ -63,6 +66,8 @@ namespace SwaySettings {
                 //     return "swaync";
                 case BLUETOOTH:
                     return "bluetooth";
+                case NETWORK:
+                    return "network";
                 case SOUND:
                     return "sound";
                 case KEYBOARD:
@@ -100,6 +105,7 @@ namespace SwaySettings {
                 SettingsItem ("computer-symbolic", PageType.ABOUT_PC),
                 SettingsItem ("bluetooth-symbolic", PageType.BLUETOOTH),
                 SettingsItem ("audio-speakers-symbolic", PageType.SOUND),
+                SettingsItem ("computer-symbolic", PageType.NETWORK),
             }),
             SettingsCategory ("Customization", {
                 SettingsItem ("preferences-desktop-wallpaper-symbolic",
@@ -259,6 +265,9 @@ namespace SwaySettings {
                 //     break;
                 case BLUETOOTH:
                     page = new BluetoothPage (item, content_page);
+                    break;
+                case NETWORK:
+                    page = new NetworkPage (item, content_page);
                     break;
                 case SOUND:
                     page = new PulsePage (item, content_page);
