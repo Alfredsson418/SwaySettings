@@ -17,6 +17,7 @@ dep_libpulse = dependency('libpulse')
 dep_libpulse_mainloop_glib = dependency('libpulse-mainloop-glib')
 dep_math = meson.get_compiler('c').find_library('m', required : true)
 dep_network_manager = dependency('libnm')
+dep_gsettings_schemas = dependency('gsettings-desktop-schemas')
 
 shared_files = files([
   'Constants.vala',
@@ -28,3 +29,4 @@ shared_files = files([
 subdir('Settings')
 subdir('Wallpaper')
 subdir('AutoStart')
+subdir('Portal')

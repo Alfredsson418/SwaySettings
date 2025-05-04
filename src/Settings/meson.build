@@ -40,6 +40,7 @@ executable(
     dep_libpulse_mainloop_glib,
     dep_math,
     dep_network_manager,
+    dep_gsettings_schemas,
   ],
   install: true,
 )

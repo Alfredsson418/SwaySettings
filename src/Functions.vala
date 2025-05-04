@@ -215,5 +215,88 @@ namespace SwaySettings {
 
             return checksum_path;
         }
+
+        public static bool set_wallpaper (string file_path,
+                                          Settings self_settings) {
+            if (file_path == null) return false;
+            try {
+                string dest_path = Path.build_path (
+                    Path.DIR_SEPARATOR_S,
+                    Environment.get_user_config_dir (),
+                    "swaysettings-wallpaper");
+
+                File file = File.new_for_path (file_path);
+                File file_dest = File.new_for_path (dest_path);
+
+                if (!file.query_exists ()) {
+                    stderr.printf (
+                        "File %s not found or permissions missing",
+                        file_path);
+                    return false;
+                }
+
+                file.copy (file_dest, FileCopyFlags.OVERWRITE);
+                Functions.generate_thumbnail (dest_path, true);
+
+                Functions.set_gsetting (self_settings,
+                                        Constants.SETTINGS_WALLPAPER_PATH,
+                                        file_path);
+
+                if (Utils.wallpaper_application_registered ()) {
+                    Utils.Config config = Utils.Config() {
+                        path = file_path,
+                        scale_mode = Utils.get_scale_mode_gschema (self_settings),
+                    };
+                    Utils.wallpaper_application.activate_action (Constants.WALLPAPER_ACTION_NAME, config);
+                }
+            } catch (Error e) {
+                stderr.printf ("%s\n", e.message);
+                return false;
+            }
+
+            return true;
+        }
+
+        public static Adw.AccentColor get_accent_color (Settings ? settings) {
+            int color_enum = GDesktop.AccentColor.BLUE;
+            if (settings != null) {
+                SettingsSchema schema = settings.settings_schema;
+                if (schema != null && schema.has_key ("accent-color")) {
+                    color_enum = settings?.get_enum ("accent-color");
+                }
+            }
+            Adw.AccentColor color;
+            switch (color_enum) {
+                default:
+                case GDesktop.AccentColor.BLUE:
+                    color = Adw.AccentColor.BLUE;
+                    break;
+                case GDesktop.AccentColor.TEAL:
+                    color = Adw.AccentColor.TEAL;
+                    break;
+                case GDesktop.AccentColor.GREEN:
+                    color = Adw.AccentColor.GREEN;
+                    break;
+                case GDesktop.AccentColor.YELLOW:
+                    color = Adw.AccentColor.YELLOW;
+                    break;
+                case GDesktop.AccentColor.ORANGE:
+                    color = Adw.AccentColor.ORANGE;
+                    break;
+                case GDesktop.AccentColor.RED:
+                    color = Adw.AccentColor.RED;
+                    break;
+                case GDesktop.AccentColor.PINK:
+                    color = Adw.AccentColor.PINK;
+                    break;
+                case GDesktop.AccentColor.PURPLE:
+                    color = Adw.AccentColor.PURPLE;
+                    break;
+                case GDesktop.AccentColor.SLATE:
+                    color = Adw.AccentColor.SLATE;
+                    break;
+            }
+            return color;
+        }
     }
 }
