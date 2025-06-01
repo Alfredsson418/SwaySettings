@@ -6,6 +6,11 @@ using NM;
 */
 
 namespace SwaySettings {
+    /*
+        This class is the main class of the network connection page
+    */
+
+
     public class NetworkPage : Page {
 
         private Client client;
@@ -13,7 +18,7 @@ namespace SwaySettings {
         public NetworkPage (SettingsItem item,
                           Adw.NavigationPage page) {
             base (item, page);
-            list_available_conn();
+            list_saved_conn();
         }
 
         private void init_nm_client() {
@@ -51,13 +56,15 @@ namespace SwaySettings {
 
             conn_list.row_selected.connect((row) => {
                 if (row != null) {
-
+                    row.get_child() as Label;
+                    this.set_child(new ConnectionEditor(this.client).get_window());
                 }
             });
 
             this.set_child(conn_list);
         }
 
+        // Not used
         private void list_available_conn() {
             init_nm_client();
 
@@ -68,7 +75,7 @@ namespace SwaySettings {
 
                 if (device.get_device_type() == NM.DeviceType.WIFI || device.get_device_type() == NM.DeviceType.ETHERNET) {
                     print("Active device: %s\n", device.get_iface());
-                    box.append(new InterfaceList(device).list);
+                    box.append(new InterfaceList(device, this).list);
                 }
             }
             this.set_child(box);

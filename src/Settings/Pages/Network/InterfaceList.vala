@@ -1,36 +1,43 @@
-using NM;
 using Gtk;
+using NM;
 
 namespace SwaySettings {
+
+    /*
+        This class should be able to fetch all network connection based on different criterials,
+        NOT DISPLAY THEM
+    */
+
     public class InterfaceList {
 
         public Gtk.ListBox list;
 
+        private Gtk.Notebook notebook;
+
         private Device interface;
 
-        public InterfaceList(Device interface) {
+        private Page parent;
+
+        public InterfaceList(Device interface, Page Parent) {
             // Optional: Set selection mode or do setup
             // this.list.set_selection_mode(Gtk.SelectionMode.SINGLE);
 
             list = new Gtk.ListBox();
+            notebook = new Gtk.Notebook();
+            this.parent = Parent;
 
             this.interface = interface;
 
             if (this.interface.get_device_type() == NM.DeviceType.WIFI) {
                 this.wifi_list();
             } else if (this.interface.get_device_type() == NM.DeviceType.ETHERNET) {
-                ;
+                default_list();
             } else {
                 default_list();
             }
 
             this.list.row_selected.connect((row) => {
-                if (row != null) {
-                    var label = row.get_child() as Gtk.Label;
-                    if (label != null) {
-                        print("Selected: %s\n", label.label);
-                    }
-                }
+                ;
             });
         }
 
@@ -43,6 +50,8 @@ namespace SwaySettings {
                 if (setting != null) {
                     print("%s\n", setting.get_id());
                     string output = "%s".printf(setting.get_id());
+
+                    print("Name: %s\n", output);
 
                     var entry = new Gtk.Label( output );
                     entry.set_margin_top(5);
