@@ -24,6 +24,10 @@ swaysettings_sources += files([
   'Network/NetworkPage.vala',
   'Network/InterfaceList.vala',
   'Network/ConnectionEditor.vala',
-  'Network/SettingsPages/TemplateEditor.vala',
-  'Network/SettingsPages/GeneralEditor.vala'
+  'Network/SettingsPages/template.vala',
+  'Network/SettingsPages/general.vala',
+  'Network/SettingsPages/ipv4.vala',
+  'Network/SettingsPages/ipv6.vala',
+  'Network/SettingsPages/wifi.vala',
+  'Network/SettingsPages/ethernet.vala'
 ])
