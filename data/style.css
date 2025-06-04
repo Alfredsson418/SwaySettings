@@ -198,3 +198,20 @@
 .slate {
   --accent-bg-color: var(--accent-slate);
 }
+
+/*  Network Page  */
+
+.nm-header {
+    border: none;
+    border-color: transparent;
+    box-shadow: none;
+    border-radius: 12px;
+}
+
+.nm-device-box {
+    margin-bottom: 20px;
+}
+
+.nm-list-item {
+    padding: 24px;
+}

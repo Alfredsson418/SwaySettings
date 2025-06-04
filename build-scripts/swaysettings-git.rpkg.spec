@@ -31,6 +31,7 @@ BuildRequires: systemd-devel
 BuildRequires: pkgconfig(systemd)
 BuildRequires: systemd
 BuildRequires: scdoc
+BuildRequires: NetworkManager-libnm-devel
 Requires: dbus
 Requires: bluez
 Requires: libgtop2

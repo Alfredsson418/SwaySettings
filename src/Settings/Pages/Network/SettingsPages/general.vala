@@ -12,8 +12,8 @@ namespace SwaySettings {
 
         private Gtk.Entry entry;
 
-        public GeneralEditor (NM.Client client) {
-            base(client, "General");
+        public GeneralEditor (NM.RemoteConnection conn) {
+            base("General");
             this.save_btn.clicked.connect(this.on_button_save);
         }
 

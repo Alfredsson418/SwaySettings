@@ -13,72 +13,103 @@ namespace SwaySettings {
 
     public class NetworkPage : Page {
 
-        private Client client;
+        protected NM.Client client;
+
+        private Gtk.Box window;
 
         public NetworkPage (SettingsItem item,
                           Adw.NavigationPage page) {
             base (item, page);
-            list_saved_conn();
+
+            init_nm_client();
+
+            if (client.get_nm_running() == false) {
+                display_disabled();
+            } else {
+                display_lists();
+            }
         }
 
         private void init_nm_client() {
             if (client == null) {
-                client = new Client();
+                client = new NM.Client();
             }
         }
 
-        private string get_hostname() {
-            init_nm_client();
-            return client.hostname;
+        private void display_disabled() {
+            var err_label = new Gtk.Label("Network Manager is not running");
+
+            err_label.add_css_class("suggested-action");
+
+            this.set_child(err_label);
         }
 
-        private void list_saved_conn() {
-            init_nm_client();
+        private void display_lists() {
+            this.window = new Gtk.Box(Orientation.VERTICAL, 0);
+
+            this.window.set_halign(Gtk.Align.CENTER);
+
+            foreach (var device in this.client.get_devices()) {
+
+                print(device.get_iface() + "\n");
+
+                // Todo: Add option do activate and deactivate device
+                var type = device.get_device_type();
+                if (!(type == DeviceType.WIFI ||
+                    type == DeviceType.ETHERNET ||
+                    type == DeviceType.BRIDGE)) {
+                        continue;
+                    }
+
+                print(device.get_iface() + "\n");
+
+                var content_box = new Gtk.Box(Orientation.VERTICAL, 0);
+                content_box.add_css_class("nm-device-box");
+
+                var device_title = "%s - %d".printf(device.get_iface(), device.get_state());
+
+                content_box.append(new Gtk.Label(device_title));
+                content_box.append(get_connection_list(device));
+
+                this.window.append(content_box);
+            }
+
+            Adw.Clamp clamp = get_clamped_widget (this.window, false);
+
+            this.set_child(clamp);
+        }
+
+        private Gtk.ListBox get_connection_list(NM.Device device) {
 
             var conn_list = new Gtk.ListBox();
+            // conn_list.add_css_class("suggested-action");
+            conn_list.add_css_class("content");
 
-            foreach(var conn in client.get_connections()) {
-                var settings = conn.get_setting_connection();
-                if (settings == null) { continue; }
-                    var id = settings.id;
-                    var type = settings.get_connection_type();
+            // Fetches saved connections
+            foreach(var conn in device.get_available_connections()) {
 
-                    string output = "%s - %s".printf(id, type);
+                // Fetches and displays connection name
+                string output = "%s".printf(conn.get_setting_connection().get_id());
 
-                    var entry = new Gtk.Label( output );
-                    entry.set_margin_top(5);
-                    entry.set_margin_bottom(5);
-                    entry.set_wrap(true);
-                    entry.set_xalign(0); // Align left
-                    conn_list.append( entry );
+                var entry = new Gtk.Box(Orientation.HORIZONTAL, 0);
+                var label = new Gtk.Label(output);
+                entry.add_css_class("nm-list-item");
+
+                entry.append(label);
+                // entry.set_child(label);
+                var click = new Gtk.GestureClick();
+                click.set_button(1); // 1 = left mouse button
+
+                click.pressed.connect((a) => {
+                    this.set_child(new ConnectionEditor(device.get_device_type(), conn).get_window());
+                });
+
+                entry.add_controller(click);
+
+                conn_list.append( entry );
 
             }
-
-            conn_list.row_selected.connect((row) => {
-                if (row != null) {
-                    row.get_child() as Label;
-                    this.set_child(new ConnectionEditor(this.client).get_window());
-                }
-            });
-
-            this.set_child(conn_list);
-        }
-
-        // Not used
-        private void list_available_conn() {
-            init_nm_client();
-
-            var box = new Box(Orientation.HORIZONTAL, 12);
-
-            var devices = client.get_devices();
-            foreach (var device in devices) {
-
-                if (device.get_device_type() == NM.DeviceType.WIFI || device.get_device_type() == NM.DeviceType.ETHERNET) {
-                    print("Active device: %s\n", device.get_iface());
-                    box.append(new InterfaceList(device, this).list);
-                }
-            }
-            this.set_child(box);
+            return conn_list;
         }
     }
 }

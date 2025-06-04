@@ -11,21 +11,17 @@ namespace SwaySettings {
 
         protected Gtk.Box window;
         protected string title;
-        private NM.Client client;
         protected Gtk.Button save_btn;
 
-        protected TemplateEditor (NM.Client client, string title) {
-            this.client = client;
+        protected TemplateEditor (string title) {
             this.title = title;
             this.save_btn = new Button.with_label("Save");
-            this.save_btn.set_size_request(50, 20);
-            this.save_btn.set_hexpand(false);
-            this.save_btn.set_vexpand(false);
+            this.save_btn.set_halign(Gtk.Align.CENTER);
+            this.save_btn.add_css_class("suggested-action");
 
 
             this.window = new Gtk.Box(Orientation.VERTICAL, 0);
             this.window.append(this.save_btn);
-            this.title = "Set title";
         }
 
         public Gtk.Box get_window() {
