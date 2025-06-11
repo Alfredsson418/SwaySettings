@@ -10,11 +10,13 @@ namespace SwaySettings {
 
     public class WIFIEditor : TemplateEditor{
 
+        protected NM.SettingWireless wifi;
+
         private Gtk.Entry entry;
 
-        public WIFIEditor (NM.RemoteConnection conn) {
+        public WIFIEditor (NM.SettingWireless wifi) {
             base("WIFI");
-            this.save_btn.clicked.connect(this.on_button_save);
+            this.wifi = wifi;
         }
 
         public void on_button_save() {

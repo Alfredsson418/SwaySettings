@@ -10,11 +10,13 @@ namespace SwaySettings {
 
     public class GeneralEditor : TemplateEditor{
 
+        protected NM.SettingConnection general;
+
         private Gtk.Entry entry;
 
-        public GeneralEditor (NM.RemoteConnection conn) {
+        public GeneralEditor (NM.SettingConnection general) {
             base("General");
-            this.save_btn.clicked.connect(this.on_button_save);
+            this.general = general;
         }
 
         public void on_button_save() {

@@ -19,56 +19,73 @@ namespace SwaySettings {
         private Adw.HeaderBar header;
         private Adw.ViewStack stack;
 
+        protected Gtk.Button save_btn;
         private Gtk.Box window;
+
+        private GeneralEditor general_page;
+        private EthernetEditor eth_page;
+        private WIFIEditor wifi_page;
+        private IPv4Editor ipv4_page;
+        private IPv6Editor ipv6_page;
 
         public ConnectionEditor(NM.DeviceType type, NM.RemoteConnection conn) {
 
-            stack = new Adw.ViewStack ();
-            header = new Adw.HeaderBar ();
-            switcher = new Adw.ViewSwitcher ();
+            this.stack = new Adw.ViewStack ();
+            this.header = new Adw.HeaderBar ();
+            this.switcher = new Adw.ViewSwitcher ();
+
+            this.save_btn = new Button.with_label("Save");
+            this.save_btn.set_halign(Gtk.Align.CENTER);
+            this.save_btn.add_css_class("suggested-action");
+            this.save_btn.clicked.connect(this.on_button_save);
 
             // This removes the minimize,maximize,close buttons
-            header.set_decoration_layout ("");
+            this.header.set_decoration_layout("");
 
-            var general_editor = new GeneralEditor(conn);
-            stack.add_titled(general_editor.get_window(), "General", general_editor.get_title());
+            this.general_page = new GeneralEditor(conn.get_setting_connection());
+            this.stack.add_titled(this.general_page.get_window(), "General", this.general_page.get_title());
 
             if (type == NM.DeviceType.ETHERNET) {
-                var eth_editor = new EthernetEditor (conn);
-                stack.add_titled(eth_editor.get_window(), "Ethernet", eth_editor.get_title ());
+                this.eth_page = new EthernetEditor(conn.get_setting_wired());
+                this.stack.add_titled(this.eth_page.get_window(), "Ethernet", this.eth_page.get_title ());
             } else if (type == NM.DeviceType.WIFI) {
-                var wifi_editor = new WIFIEditor(conn);
-                stack.add_titled(wifi_editor.get_window (), "Wifi", wifi_editor.get_title ());
+                this.wifi_page = new WIFIEditor(conn.get_setting_wireless());
+                this.stack.add_titled(this.wifi_page.get_window (), "Wifi", this.wifi_page.get_title ());
             }
 
             var ipv4 = conn.get_setting_ip4_config();
             if (ipv4 != null && ipv4.method != "disabled") {
-                var ipv4_editor = new IPv4Editor(conn);
-                stack.add_titled(ipv4_editor.get_window(), "ipv4", ipv4_editor.get_title());
+                this.ipv4_page = new IPv4Editor(ipv4);
+                this.stack.add_titled(this.ipv4_page.get_window(), "ipv4", this.ipv4_page.get_title());
             }
 
             var ipv6 = conn.get_setting_ip6_config();
             if (ipv6 != null && ipv6.method != "disabled") {
-                var ipv6_editor = new IPv6Editor(conn);
-                stack.add_titled(ipv6_editor.get_window(), "ipv6", ipv6_editor.get_title());
+                this.ipv6_page = new IPv6Editor(ipv6);
+                this.stack.add_titled(this.ipv6_page.get_window(), "ipv6", this.ipv6_page.get_title());
             }
 
-            header.set_halign(Gtk.Align.CENTER);
-            header.add_css_class("suggested-action");
-            header.add_css_class("nm-header");
+            this.header.set_halign(Gtk.Align.CENTER);
+            this.header.add_css_class("suggested-action");
+            this.header.add_css_class("nm-header");
 
-            switcher.set_stack(stack);
+            this.switcher.set_stack(this.stack);
 
-            header.set_title_widget(switcher);
+            this.header.set_title_widget(this.switcher);
 
-            window = new Gtk.Box(Orientation.VERTICAL, 0);
+            this.window = new Gtk.Box(Orientation.VERTICAL, 0);
 
-            window.append(header);
-            window.append(stack);
+            this.window.append(this.header);
+            this.window.append(this.stack);
+            this.window.append(this.save_btn);
         }
 
         public Gtk.Box get_window() {
             return this.window;
+        }
+
+        private void on_button_save() {
+            print("test\n");
         }
      }
 }

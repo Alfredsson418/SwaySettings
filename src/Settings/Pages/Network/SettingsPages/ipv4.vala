@@ -10,11 +10,13 @@ namespace SwaySettings {
 
     public class IPv4Editor : TemplateEditor{
 
+        protected NM.SettingIP4Config ipv4;
+
         private Gtk.Entry entry;
 
-        public IPv4Editor (NM.RemoteConnection conn) {
+        public IPv4Editor (NM.SettingIP4Config ipv4) {
             base( "IPv4");
-            this.save_btn.clicked.connect(this.on_button_save);
+            this.ipv4 = ipv4;
         }
 
         public void on_button_save() {

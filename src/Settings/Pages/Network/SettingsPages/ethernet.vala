@@ -10,11 +10,13 @@ namespace SwaySettings {
 
     public class EthernetEditor : TemplateEditor{
 
+        protected NM.SettingWired eth;
+
         private Gtk.Entry entry;
 
-        public EthernetEditor (NM.RemoteConnection conn) {
+        public EthernetEditor (NM.SettingWired eth) {
             base("Ethernet");
-            this.save_btn.clicked.connect(this.on_button_save);
+            this.eth = eth;
         }
 
         public void on_button_save() {

@@ -20,7 +20,6 @@ namespace SwaySettings {
         public NetworkPage (SettingsItem item,
                           Adw.NavigationPage page) {
             base (item, page);
-
             init_nm_client();
 
             if (client.get_nm_running() == false) {
@@ -66,10 +65,12 @@ namespace SwaySettings {
                 var content_box = new Gtk.Box(Orientation.VERTICAL, 0);
                 content_box.add_css_class("nm-device-box");
 
-                var device_title = "%s - %d".printf(device.get_iface(), device.get_state());
+                var device_title = "%s - %s".printf(device.get_iface(), get_device_state(device.get_state()));
 
                 content_box.append(new Gtk.Label(device_title));
                 content_box.append(get_connection_list(device));
+
+                // content_box.add_css_class(string css_class);
 
                 this.window.append(content_box);
             }
@@ -96,20 +97,60 @@ namespace SwaySettings {
                 entry.add_css_class("nm-list-item");
 
                 entry.append(label);
-                // entry.set_child(label);
-                var click = new Gtk.GestureClick();
-                click.set_button(1); // 1 = left mouse button
 
-                click.pressed.connect((a) => {
+                // Edit connection
+                var left_click = new Gtk.GestureClick();
+                left_click.set_button(1); // 1 = left mouse button, 2 middle mouse, 3 right click
+                left_click.pressed.connect((a) => {
                     this.set_child(new ConnectionEditor(device.get_device_type(), conn).get_window());
                 });
 
-                entry.add_controller(click);
+                // Togggle Connect/Disconnect
+                var right_click = new Gtk.GestureClick();
+                right_click.set_button(3); // 1 = left mouse button, 2 middle mouse, 3 right click
+                right_click.pressed.connect((a) => {
+
+                });
+
+                entry.add_controller(left_click);
+                entry.add_controller(right_click);
 
                 conn_list.append( entry );
 
             }
             return conn_list;
+        }
+
+        public static string get_device_state(NM.DeviceState state) {
+            switch (state) {
+                case ACTIVATED:
+                    return "Activated";
+                case CONFIG:
+                    return "Config";
+                case DEACTIVATING:
+                    return "Deactivating";
+                case DISCONNECTED:
+                    return "Disconnected";
+                case FAILED:
+                    return "Failed";
+                case IP_CHECK:
+                    return "IP Check";
+                case IP_CONFIG:
+                    return "IP Config";
+                case NEED_AUTH:
+                    return "Needs Auth";
+                case PREPARE:
+                    return "Prepare";
+                case SECONDARIES:
+                    return "Secondaries";
+                case UNAVAILABLE:
+                    return "Unavailable";
+                case UNMANAGED:
+                    return "Unmanaged";
+                case UNKNOWN:
+                default:
+                    return "Unknown";
+            }
         }
     }
 }

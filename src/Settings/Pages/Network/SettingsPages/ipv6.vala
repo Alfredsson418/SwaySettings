@@ -10,11 +10,13 @@ namespace SwaySettings {
 
     public class IPv6Editor : TemplateEditor{
 
+        protected NM.SettingIP6Config ipv6;
+
         private Gtk.Entry entry;
 
-        public IPv6Editor (NM.RemoteConnection conn) {
+        public IPv6Editor (NM.SettingIP6Config ipv6) {
             base("IPv6");
-            this.save_btn.clicked.connect(this.on_button_save);
+            this.ipv6 = ipv6;
         }
 
         public void on_button_save() {
