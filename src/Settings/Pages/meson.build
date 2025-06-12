@@ -23,6 +23,8 @@ swaysettings_sources += files([
   'Pulse/PulseSinkInput.vala',
   'Network/NetworkPage.vala',
   'Network/ConnectionEditor.vala',
+  'Network/NetworkDevice.vala',
+  'Network/NetworkConnection.vala',
   'Network/SettingsPages/template.vala',
   'Network/SettingsPages/general.vala',
   'Network/SettingsPages/ipv4.vala',

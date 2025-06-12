@@ -57,15 +57,15 @@ namespace SwaySettings {
                 if (!(type == DeviceType.WIFI ||
                     type == DeviceType.ETHERNET ||
                     type == DeviceType.BRIDGE)) {
-                        continue;
-                    }
+                    continue;
+                }
 
                 print(device.get_iface() + "\n");
 
                 var content_box = new Gtk.Box(Orientation.VERTICAL, 0);
                 content_box.add_css_class("nm-device-box");
 
-                var device_title = "%s - %s".printf(device.get_iface(), get_device_state(device.get_state()));
+                var device_title = "%s - %s".printf(device.get_iface(), NetworkDevice.get_device_state(device));
 
                 content_box.append(new Gtk.Label(device_title));
                 content_box.append(get_connection_list(device));
@@ -90,13 +90,8 @@ namespace SwaySettings {
             foreach(var conn in device.get_available_connections()) {
 
                 // Fetches and displays connection name
-                string output = "%s".printf(conn.get_setting_connection().get_id());
 
-                var entry = new Gtk.Box(Orientation.HORIZONTAL, 0);
-                var label = new Gtk.Label(output);
-                entry.add_css_class("nm-list-item");
-
-                entry.append(label);
+                var entry = new Gtk.ListBoxRow();
 
                 // Edit connection
                 var left_click = new Gtk.GestureClick();
@@ -109,48 +104,19 @@ namespace SwaySettings {
                 var right_click = new Gtk.GestureClick();
                 right_click.set_button(3); // 1 = left mouse button, 2 middle mouse, 3 right click
                 right_click.pressed.connect((a) => {
-
+                    NetworkConnection.toggle_connection(this.client, device, conn);
+                    entry.set_child(NetworkConnection.get_conn_label(this.client, conn));
                 });
 
                 entry.add_controller(left_click);
                 entry.add_controller(right_click);
 
+                entry.set_child(NetworkConnection.get_conn_label(client, conn));
+
                 conn_list.append( entry );
 
             }
             return conn_list;
-        }
-
-        public static string get_device_state(NM.DeviceState state) {
-            switch (state) {
-                case ACTIVATED:
-                    return "Activated";
-                case CONFIG:
-                    return "Config";
-                case DEACTIVATING:
-                    return "Deactivating";
-                case DISCONNECTED:
-                    return "Disconnected";
-                case FAILED:
-                    return "Failed";
-                case IP_CHECK:
-                    return "IP Check";
-                case IP_CONFIG:
-                    return "IP Config";
-                case NEED_AUTH:
-                    return "Needs Auth";
-                case PREPARE:
-                    return "Prepare";
-                case SECONDARIES:
-                    return "Secondaries";
-                case UNAVAILABLE:
-                    return "Unavailable";
-                case UNMANAGED:
-                    return "Unmanaged";
-                case UNKNOWN:
-                default:
-                    return "Unknown";
-            }
         }
     }
 }
