@@ -23,19 +23,18 @@ namespace SwaySettings {
             this.client = client;
             this.conn = conn;
             this.device = device;
-            this.widget = new Box(Orientation.HORIZONTAL, 0);
 
             this.label = new Gtk.Label("Placeholder");
 
+
+            this.widget = new Box(Orientation.HORIZONTAL, 0);
+            this.widget.set_halign(Gtk.Align.CENTER);
             this.widget.append(label);
             this.widget.add_css_class("nm-list-item");
 
             this.conn_active = this.is_active();
 
             this.update_conn_label();
-
-
-
         }
 
 
@@ -43,7 +42,7 @@ namespace SwaySettings {
             string output;
 
             if (this.conn_active) {
-                output = "* %s".printf(conn.get_setting_connection().get_id());
+                output = "• %s •".printf(conn.get_setting_connection().get_id());
             } else {
                 output = "%s".printf(conn.get_setting_connection().get_id());
             }
@@ -53,7 +52,6 @@ namespace SwaySettings {
 
         public Gtk.Box get_widget() {
             return this.widget;
-
         }
 
         public bool is_active() {
@@ -88,7 +86,7 @@ namespace SwaySettings {
 
             } else {
                 client.deactivate_connection_async(temp_conn, null);
-                print("Deactivation requested.\n");
+                print("Deactivation requested: %s\n", conn.get_id());
                 this.conn_active = false;
                 // entry.set_child(NetworkConnection.get_conn_label(client, conn));
             }

@@ -33,10 +33,6 @@ namespace SwaySettings {
             }
         }
 
-        public async void on_refresh() {
-            // display_lists();
-        }
-
         private void init_nm_client() {
             if (client == null) {
                 client = new NM.Client();
@@ -118,7 +114,6 @@ namespace SwaySettings {
                 entry.add_controller(right_click);
 
                 conn_list.append( entry );
-
             }
             return conn_list;
         }

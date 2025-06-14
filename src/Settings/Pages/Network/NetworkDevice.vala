@@ -16,12 +16,13 @@ namespace SwaySettings {
 
         public NetworkDevice (NM.Device device) {
             this.device = device;
+            this.label = new Gtk.Label("Placeholder");
 
             this.widget = new Gtk.Box(Orientation.HORIZONTAL, 0);
-            this.label = new Gtk.Label("Placeholder");
+            this.widget.set_halign(Gtk.Align.CENTER);
             this.widget.append(label);
-            update_device_label();
 
+            update_device_label();
         }
 
 
