@@ -1,4 +1,5 @@
 using NM;
+using Gtk;
 
 namespace SwaySettings {
     /*
@@ -8,13 +9,32 @@ namespace SwaySettings {
 
     public class NetworkDevice {
 
-        public NetworkDevice () {
-            // this.device = device;
+        private NM.Device device;
+
+        private Gtk.Box widget;
+        private Gtk.Label label;
+
+        public NetworkDevice (NM.Device device) {
+            this.device = device;
+
+            this.widget = new Gtk.Box(Orientation.HORIZONTAL, 0);
+            this.label = new Gtk.Label("Placeholder");
+            this.widget.append(label);
+            update_device_label();
+
         }
 
 
-        public static string get_device_state(NM.Device device) {
-            switch (device.get_state()) {
+        public void update_device_label() {
+            this.label.set_text("%s - %s".printf(device.get_iface(), this.get_device_state()));
+        }
+
+        public Gtk.Box get_widget() {
+            return this.widget;
+        }
+
+        public string get_device_state() {
+            switch (this.device.get_state()) {
                 case ACTIVATED:
                     return "Activated";
                 case CONFIG:

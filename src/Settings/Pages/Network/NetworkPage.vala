@@ -25,8 +25,16 @@ namespace SwaySettings {
             if (client.get_nm_running() == false) {
                 display_disabled();
             } else {
+                this.window = new Gtk.Box(Orientation.VERTICAL, 0);
+
+                this.window.set_halign(Gtk.Align.CENTER);
+
                 display_lists();
             }
+        }
+
+        public async void on_refresh() {
+            // display_lists();
         }
 
         private void init_nm_client() {
@@ -43,14 +51,10 @@ namespace SwaySettings {
             this.set_child(err_label);
         }
 
-        private void display_lists() {
-            this.window = new Gtk.Box(Orientation.VERTICAL, 0);
-
-            this.window.set_halign(Gtk.Align.CENTER);
+        private async void display_lists() {
 
             foreach (var device in this.client.get_devices()) {
 
-                print(device.get_iface() + "\n");
 
                 // Todo: Add option do activate and deactivate device
                 var type = device.get_device_type();
@@ -60,17 +64,20 @@ namespace SwaySettings {
                     continue;
                 }
 
-                print(device.get_iface() + "\n");
+                var device_class = new NetworkDevice(device);
+
+
+                device.state_changed.connect((a) => {
+                    device_class.update_device_label();
+                });
 
                 var content_box = new Gtk.Box(Orientation.VERTICAL, 0);
                 content_box.add_css_class("nm-device-box");
 
-                var device_title = "%s - %s".printf(device.get_iface(), NetworkDevice.get_device_state(device));
 
-                content_box.append(new Gtk.Label(device_title));
+                content_box.append(device_class.get_widget());
                 content_box.append(get_connection_list(device));
 
-                // content_box.add_css_class(string css_class);
 
                 this.window.append(content_box);
             }
@@ -89,9 +96,7 @@ namespace SwaySettings {
             // Fetches saved connections
             foreach(var conn in device.get_available_connections()) {
 
-                // Fetches and displays connection name
-
-                var entry = new Gtk.ListBoxRow();
+                var conn_class = new NetworkConnection(client, device, conn);
 
                 // Edit connection
                 var left_click = new Gtk.GestureClick();
@@ -104,14 +109,13 @@ namespace SwaySettings {
                 var right_click = new Gtk.GestureClick();
                 right_click.set_button(3); // 1 = left mouse button, 2 middle mouse, 3 right click
                 right_click.pressed.connect((a) => {
-                    NetworkConnection.toggle_connection(this.client, device, conn);
-                    entry.set_child(NetworkConnection.get_conn_label(this.client, conn));
+                    conn_class.toggle_update_connection();
                 });
+
+                var entry = conn_class.get_widget();
 
                 entry.add_controller(left_click);
                 entry.add_controller(right_click);
-
-                entry.set_child(NetworkConnection.get_conn_label(client, conn));
 
                 conn_list.append( entry );
 
