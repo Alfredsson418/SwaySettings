@@ -267,7 +267,7 @@ namespace SwaySettings {
                     page = new BluetoothPage (item, content_page);
                     break;
                 case NETWORK:
-                    page = new NetworkPage (item, content_page);
+                    page = new Network (item, content_page);
                     break;
                 case SOUND:
                     page = new PulsePage (item, content_page);

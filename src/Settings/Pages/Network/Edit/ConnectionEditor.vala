@@ -13,7 +13,7 @@ namespace SwaySettings {
             - IPv6 Settings
     */
 
-    public class ConnectionEditor {
+    public class ConnectionEditor : Page {
 
         private Adw.ViewSwitcher switcher;
         private Adw.HeaderBar header;
@@ -28,7 +28,11 @@ namespace SwaySettings {
         private IPv4Editor ipv4_page;
         private IPv6Editor ipv6_page;
 
-        public ConnectionEditor(NM.DeviceType type, NM.RemoteConnection conn) {
+        public ConnectionEditor(SettingsItem item,
+                          Adw.NavigationPage page,
+                          NM.DeviceType type, NM.RemoteConnection conn) {
+
+            base(item, page);
 
             this.stack = new Adw.ViewStack ();
             this.header = new Adw.HeaderBar ();

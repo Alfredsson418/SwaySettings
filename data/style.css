@@ -201,6 +201,32 @@
 
 /*  Network Page  */
 
+.nm-grid-top-left {
+    border-top-left-radius: 40px;
+}
+
+.nm-grid-top-right {
+    border-top-right-radius: 40px;
+}
+
+.nm-grid-bottom-left {
+    border-bottom-left-radius: 40px;
+}
+
+.nm-grid-bottom-right {
+    border-bottom-right-radius: 40px;
+}
+
+.nm-grid-item {
+    padding: 90px;
+    margin: 3px;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.nm-grid-item:hover {
+    background-color: rgba(255, 255, 255, 0.10);
+}
+
 .nm-header {
     border: none;
     border-color: transparent;

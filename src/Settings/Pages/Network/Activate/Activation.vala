@@ -11,13 +11,13 @@ namespace SwaySettings {
     */
 
 
-    public class NetworkPage : Page {
+    public class ActivationPage : Page {
 
         protected NM.Client client;
 
         private Gtk.Box window;
 
-        public NetworkPage (SettingsItem item,
+        public ActivationPage (SettingsItem item,
                           Adw.NavigationPage page) {
             base (item, page);
             init_nm_client();
@@ -94,23 +94,15 @@ namespace SwaySettings {
 
                 var conn_class = new NetworkConnection(client, device, conn);
 
-                // Edit connection
-                var left_click = new Gtk.GestureClick();
-                left_click.set_button(1); // 1 = left mouse button, 2 middle mouse, 3 right click
-                left_click.pressed.connect((a) => {
-                    this.set_child(new ConnectionEditor(device.get_device_type(), conn).get_window());
-                });
-
                 // Togggle Connect/Disconnect
                 var right_click = new Gtk.GestureClick();
-                right_click.set_button(3); // 1 = left mouse button, 2 middle mouse, 3 right click
+                right_click.set_button(1); // 1 = left mouse button, 2 middle mouse, 3 right click
                 right_click.pressed.connect((a) => {
                     conn_class.toggle_update_connection();
                 });
 
                 var entry = conn_class.get_widget();
 
-                entry.add_controller(left_click);
                 entry.add_controller(right_click);
 
                 conn_list.append( entry );

@@ -21,14 +21,15 @@ swaysettings_sources += files([
   'Pulse/PulseDaemon.vala',
   'Pulse/PulseDevice.vala',
   'Pulse/PulseSinkInput.vala',
-  'Network/NetworkPage.vala',
-  'Network/ConnectionEditor.vala',
+  'Network/Network.vala',
+  'Network/Edit/ConnectionEditor.vala',
   'Network/NetworkDevice.vala',
   'Network/NetworkConnection.vala',
-  'Network/SettingsPages/template.vala',
-  'Network/SettingsPages/general.vala',
-  'Network/SettingsPages/ipv4.vala',
-  'Network/SettingsPages/ipv6.vala',
-  'Network/SettingsPages/wifi.vala',
-  'Network/SettingsPages/ethernet.vala'
+  'Network/Edit/SettingsPages/template.vala',
+  'Network/Edit/SettingsPages/general.vala',
+  'Network/Edit/SettingsPages/ipv4.vala',
+  'Network/Edit/SettingsPages/ipv6.vala',
+  'Network/Edit/SettingsPages/wifi.vala',
+  'Network/Edit/SettingsPages/ethernet.vala',
+  'Network/Activate/Activation.vala'
 ])
