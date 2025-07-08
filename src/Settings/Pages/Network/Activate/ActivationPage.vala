@@ -11,40 +11,27 @@ namespace SwaySettings {
     */
 
 
-    public class ActivationPage : Page {
+    public class ActivationPage : PageScroll {
 
         protected NM.Client client;
 
         private Gtk.Box window;
 
+        public override Gtk.Widget set_child () {
+            return this.window;
+        }
+
         public ActivationPage (SettingsItem item,
-                          Adw.NavigationPage page) {
+                          Adw.NavigationPage page, NM.Client client) {
             base (item, page);
-            init_nm_client();
 
-            if (client.get_nm_running() == false) {
-                display_disabled();
-            } else {
-                this.window = new Gtk.Box(Orientation.VERTICAL, 0);
+            this.client = client;
 
-                this.window.set_halign(Gtk.Align.CENTER);
+            this.window = new Gtk.Box(Orientation.VERTICAL, 0);
 
-                display_lists();
-            }
-        }
+            this.window.set_halign(Gtk.Align.CENTER);
 
-        private void init_nm_client() {
-            if (client == null) {
-                client = new NM.Client();
-            }
-        }
-
-        private void display_disabled() {
-            var err_label = new Gtk.Label("Network Manager is not running");
-
-            err_label.add_css_class("suggested-action");
-
-            this.set_child(err_label);
+            display_lists();
         }
 
         private async void display_lists() {
@@ -54,9 +41,7 @@ namespace SwaySettings {
 
                 // Todo: Add option do activate and deactivate device
                 var type = device.get_device_type();
-                if (!(type == DeviceType.WIFI ||
-                    type == DeviceType.ETHERNET ||
-                    type == DeviceType.BRIDGE)) {
+                if (!NetworkDevice.is_approved(type)) {
                     continue;
                 }
 
@@ -77,10 +62,6 @@ namespace SwaySettings {
 
                 this.window.append(content_box);
             }
-
-            Adw.Clamp clamp = get_clamped_widget (this.window, false);
-
-            this.set_child(clamp);
         }
 
         private Gtk.ListBox get_connection_list(NM.Device device) {
@@ -92,13 +73,13 @@ namespace SwaySettings {
             // Fetches saved connections
             foreach(var conn in device.get_available_connections()) {
 
-                var conn_class = new NetworkConnection(client, device, conn);
+                var conn_class = new NetworkConnection(client, conn);
 
                 // Togggle Connect/Disconnect
                 var right_click = new Gtk.GestureClick();
                 right_click.set_button(1); // 1 = left mouse button, 2 middle mouse, 3 right click
                 right_click.pressed.connect((a) => {
-                    conn_class.toggle_update_connection();
+                    conn_class.toggle_update_connection(device);
                 });
 
                 var entry = conn_class.get_widget();

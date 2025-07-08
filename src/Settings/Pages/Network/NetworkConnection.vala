@@ -10,7 +10,6 @@ namespace SwaySettings {
     public class NetworkConnection {
 
         private NM.Client client;
-        private NM.Device device;
         private NM.RemoteConnection conn;
 
         private Gtk.Box widget;
@@ -18,11 +17,12 @@ namespace SwaySettings {
 
         private bool conn_active;
 
+        private bool show_active;
 
-        public NetworkConnection (NM.Client client, NM.Device device, NM.RemoteConnection conn) {
+        public NetworkConnection (NM.Client client, NM.RemoteConnection conn, bool show_active = true) {
             this.client = client;
             this.conn = conn;
-            this.device = device;
+            this.show_active = show_active;
 
             this.label = new Gtk.Label("Placeholder");
 
@@ -41,7 +41,7 @@ namespace SwaySettings {
         private async void update_conn_label() {
             string output;
 
-            if (this.conn_active) {
+            if (this.show_active && this.conn_active) {
                 output = "• %s •".printf(conn.get_setting_connection().get_id());
             } else {
                 output = "%s".printf(conn.get_setting_connection().get_id());
@@ -72,7 +72,7 @@ namespace SwaySettings {
             return null;
         }
 
-        public async void toggle_update_connection() {
+        public async void toggle_update_connection(NM.Device device) {
             var temp_conn = this.get_active_connection();
             if (temp_conn == null) {
                 try {
@@ -92,6 +92,5 @@ namespace SwaySettings {
             }
             update_conn_label();
         }
-
     }
 }

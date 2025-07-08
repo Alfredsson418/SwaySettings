@@ -31,5 +31,7 @@ swaysettings_sources += files([
   'Network/Edit/SettingsPages/ipv6.vala',
   'Network/Edit/SettingsPages/wifi.vala',
   'Network/Edit/SettingsPages/ethernet.vala',
-  'Network/Activate/Activation.vala'
+  'Network/Activate/ActivationPage.vala',
+  'Network/Edit/EditorPage.vala',
+  'Network/Widgets/DisplayList.vala'
 ])

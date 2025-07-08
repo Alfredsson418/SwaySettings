@@ -65,5 +65,22 @@ namespace SwaySettings {
                     return "Unknown";
             }
         }
+
+        public static bool is_approved(NM.DeviceType type) {
+            foreach(var d in get_approved()) {
+                if (d == type) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static NM.DeviceType[] get_approved() {
+            return {
+                WIFI,
+                ETHERNET,
+                BRIDGE
+            };
+        }
     }
 }
